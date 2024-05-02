@@ -1,0 +1,82 @@
+// Define states for different screens
+final int MAIN_MENU = 0;
+final int LEARNING_MODULE = 1;
+final int PROGRESS_TRACKER = 2;
+
+int currentScreen = MAIN_MENU;
+int score = 0;
+int totalQuestions = 3;
+int currentQuestion = 0;
+String[] sentences = {"Eu gosta de comer peixe.", "Ela irá para praia amanhã.", "Eles fui ao parque ontem."};
+String[] correctAnswers = {"Eu gosto de comer peixe.", "Ela irá para a praia amanhã.", "Eles foram ao parque ontem."};
+String userAnswer = "";
+
+void setup() {
+  size(400, 300);
+  textAlign(CENTER, CENTER);
+}
+
+void draw() {
+  background(220);
+  switch (currentScreen) {
+    case MAIN_MENU:
+      drawMainMenu();
+      break;
+    case LEARNING_MODULE:
+      drawLearningModule();
+      break;
+    case PROGRESS_TRACKER:
+      drawProgressTracker();
+      break;
+  }
+}
+
+void keyPressed() {
+  if (currentScreen == LEARNING_MODULE) {
+    if (key == ENTER) {
+      checkAnswer();
+    } else {
+      userAnswer += key;
+    }
+  }
+}
+
+void checkAnswer() {
+  if (userAnswer.equalsIgnoreCase(correctAnswers[currentQuestion])) {
+    score++;
+  }
+  currentQuestion++;
+  userAnswer = "";
+  if (currentQuestion >= totalQuestions) {
+    currentScreen = PROGRESS_TRACKER;
+  }
+}
+
+void drawMainMenu() {
+  fill(0);
+  text("Menu Principal", width/2, height/2 - 30);
+  text("1. Iniciar Verificação", width/2, height/2 + 10);
+  text("2. Ver Progresso", width/2, height/2 + 30);
+}
+
+void drawLearningModule() {
+  fill(0);
+  text("Corrija a frase: " + sentences[currentQuestion], width/2, height/2 - 30);
+  text("Sua correção: " + userAnswer, width/2, height/2);
+}
+
+void drawProgressTracker() {
+  fill(0);
+  text("Progresso", width/2, height/2 - 30);
+  text("Pontuação: " + score + " / " + totalQuestions, width/2, height/2);
+}
+
+void mouseClicked() {
+  if (currentScreen == MAIN_MENU) {
+    if (mouseY > height/2 && mouseY < height/2 + 10) {
+      currentScreen = LEARNING_MODULE;
+    } else if (mouseY > height/2 + 30 && mouseY < height/2 + 50) {
+      currentScreen = PROGRESS_TRACKER;
+    }
+  }
+}
